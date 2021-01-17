@@ -1,0 +1,183 @@
+---
+title: "Voting patterns of Immigrants"
+output: html_notebook
+author: Dennis Shpits
+date: "`r Sys.Date()`"
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Immigration can change election results. In this R notebook we will explore the ANES dataset. We will show how immigrants can change election results by looking into their voting patterns. Particularly we will explore how foreign born voters can sway election results toward a certain party.
+
+
+```{r}
+#Have to install the following package
+#install.packages("tidyverse")
+#install.packages("haven")
+#install.packages("dplyr")
+
+library(haven)
+library(dplyr)
+setwd("C:/Users/Dennis/Documents/GithubClone/Spring2021-Project1-dennisshpits")
+getwd()
+
+data_sav_file <- "./data/anes_timeseries_cdf.sav"
+
+anes_dat <- read_sav(data_sav_file)
+
+```
+
+
+In order to explore immigrant voting patterns we look at what countries our immigrants are born in. Respondents born outside the US will be important in our analysis. We also remove respondents whose parents were born in the US as they are not pure immigrants.
+
+```{r}
+##Remove NA values from Birth Country Column
+Born_cleaned<-anes_dat[complete.cases(anes_dat[90]),]
+
+##Remove people born in the US
+non_us_Born_cleaned<-Born_cleaned %>% filter(VCF0142 > 199)
+
+##Remove if both parents born in US
+non_us_Born_cleaned_parents_too<-non_us_Born_cleaned %>% filter(VCF0143 != 1)
+
+##Filter unique people out so we have one record per respondent
+non_us_Born_cleaned_unique<-non_us_Born_cleaned_parents_too[!duplicated(non_us_Born_cleaned_parents_too[ , c("VCF0006a")]),]
+
+###Create pie chart
+###pie chart of respondant origin in the entire dataset
+chart_table<-select(non_us_Born_cleaned_unique, Country_of_Birth=VCF0142)
+
+##Update to show country names
+
+#convert column to string
+string_column <- data.frame(lapply(chart_table, as.character), stringsAsFactors=FALSE)
+
+#update each country
+string_column[string_column$Country_of_Birth == 315, "Country_of_Birth"] <- "Germany"
+string_column[string_column$Country_of_Birth == 351, "Country_of_Birth"] <- "Italy"
+string_column[string_column$Country_of_Birth == 209, "Country_of_Birth"] <- "Canada"
+string_column[string_column$Country_of_Birth == 219, "Country_of_Birth"] <- "Mexico"
+string_column[string_column$Country_of_Birth == 336, "Country_of_Birth"] <- "Poland"
+string_column[string_column$Country_of_Birth == 337, "Country_of_Birth"] <- "Russia"
+string_column[string_column$Country_of_Birth == 301, "Country_of_Birth"] <- "England"
+string_column[string_column$Country_of_Birth == 428, "Country_of_Birth"] <- "Southeast Asia"
+string_column[string_column$Country_of_Birth == 310, "Country_of_Birth"] <- "Austria"
+string_column[string_column$Country_of_Birth == 259, "Country_of_Birth"] <- "South America"
+string_column[string_column$Country_of_Birth == 302, "Country_of_Birth"] <- "Ireland"
+string_column[string_column$Country_of_Birth == 333, "Country_of_Birth"] <- "Hungary"
+string_column[string_column$Country_of_Birth == 324, "Country_of_Birth"] <- "Sweden"
+string_column[string_column$Country_of_Birth == 331, "Country_of_Birth"] <- "Czechoslovakia"
+string_column[string_column$Country_of_Birth == 343, "Country_of_Birth"] <- "Greece"
+string_column[string_column$Country_of_Birth == 317, "Country_of_Birth"] <- "Netherlands"
+string_column[string_column$Country_of_Birth == 323, "Country_of_Birth"] <- "Norway"
+string_column[string_column$Country_of_Birth == 312, "Country_of_Birth"] <- "France"
+string_column[string_column$Country_of_Birth == 303, "Country_of_Birth"] <- "Scotland"
+string_column[string_column$Country_of_Birth == 345, "Country_of_Birth"] <- "Yugoslavia"
+string_column[string_column$Country_of_Birth == 404, "Country_of_Birth"] <- "India"
+string_column[string_column$Country_of_Birth == 431, "Country_of_Birth"] <- "China"
+string_column[string_column$Country_of_Birth == 452, "Country_of_Birth"] <- "Korea"
+string_column[string_column$Country_of_Birth == 509, "Country_of_Birth"] <- "Turkey"
+string_column[string_column$Country_of_Birth == 338, "Country_of_Birth"] <- "Ukraine"
+string_column[string_column$Country_of_Birth == 451, "Country_of_Birth"] <- "Japan"
+string_column[string_column$Country_of_Birth == 235, "Country_of_Birth"] <- "Haiti"
+string_column[string_column$Country_of_Birth == 313, "Country_of_Birth"] <- "Germany"
+string_column[string_column$Country_of_Birth == 321, "Country_of_Birth"] <- "Denmark"
+string_column[string_column$Country_of_Birth == 208, "Country_of_Birth"] <- "Canada"
+string_column[string_column$Country_of_Birth == 233, "Country_of_Birth"] <- "Cuba"
+string_column[string_column$Country_of_Birth == 344, "Country_of_Birth"] <- "Rumania"
+string_column[string_column$Country_of_Birth == 207, "Country_of_Birth"] <- "Canada"
+string_column[string_column$Country_of_Birth == 334, "Country_of_Birth"] <- "Latvia"
+string_column[string_column$Country_of_Birth == 699, "Country_of_Birth"] <- "African country"
+string_column[string_column$Country_of_Birth == 704, "Country_of_Birth"] <- "Australia"
+string_column[string_column$Country_of_Birth == 239, "Country_of_Birth"] <- "West Indies"
+string_column[string_column$Country_of_Birth == 311, "Country_of_Birth"] <- "Belgium"
+string_column[string_column$Country_of_Birth == 504, "Country_of_Birth"] <- "Israel"
+string_column[string_column$Country_of_Birth == 231, "Country_of_Birth"] <- "West Indies"
+string_column[string_column$Country_of_Birth == 335, "Country_of_Birth"] <- "Lithuania"
+string_column[string_column$Country_of_Birth == 353, "Country_of_Birth"] <- "Spain"
+string_column[string_column$Country_of_Birth == 237, "Country_of_Birth"] <- "West Indies"
+string_column[string_column$Country_of_Birth == 238, "Country_of_Birth"] <- "West Indies"
+string_column[string_column$Country_of_Birth == 304, "Country_of_Birth"] <- "Wales"
+string_column[string_column$Country_of_Birth == 318, "Country_of_Birth"] <- "Switzerland"
+string_column[string_column$Country_of_Birth == 352, "Country_of_Birth"] <- "Portugal"
+string_column[string_column$Country_of_Birth == 229, "Country_of_Birth"] <- "Central America"
+string_column[string_column$Country_of_Birth == 229, "Country_of_Birth"] <- "Central America"
+string_column[string_column$Country_of_Birth == 332, "Country_of_Birth"] <- "Estonia"
+string_column[string_column$Country_of_Birth == 399, "Country_of_Birth"] <- "Europe"
+string_column[string_column$Country_of_Birth == 406, "Country_of_Birth"] <- "Pakistan"
+string_column[string_column$Country_of_Birth == 434, "Country_of_Birth"] <- "Taiwan"
+string_column[string_column$Country_of_Birth == 502, "Country_of_Birth"] <- "Egypt"
+string_column[string_column$Country_of_Birth == 655, "Country_of_Birth"] <- "South Africa"
+string_column[string_column$Country_of_Birth == 201, "Country_of_Birth"] <- "North America"
+string_column[string_column$Country_of_Birth == 314, "Country_of_Birth"] <- "Germany"
+string_column[string_column$Country_of_Birth == 501, "Country_of_Birth"] <- "Egypt"
+string_column[string_column$Country_of_Birth == 503, "Country_of_Birth"] <- "Iraq"
+string_column[string_column$Country_of_Birth == 505, "Country_of_Birth"] <- "Jordan"
+string_column[string_column$Country_of_Birth == 997, "Country_of_Birth"] <- "Other"
+string_column[string_column$Country_of_Birth == 308, "Country_of_Birth"] <- "UK"
+string_column[string_column$Country_of_Birth == 322, "Country_of_Birth"] <- "Finland"
+string_column[string_column$Country_of_Birth == 325, "Country_of_Birth"] <- "Iceland"
+string_column[string_column$Country_of_Birth == 339, "Country_of_Birth"] <- "Europe"
+string_column[string_column$Country_of_Birth == 354, "Country_of_Birth"] <- "Malta"
+string_column[string_column$Country_of_Birth == 401, "Country_of_Birth"] <- "Afghanistan"
+string_column[string_column$Country_of_Birth == 432, "Country_of_Birth"] <- "Other"
+string_column[string_column$Country_of_Birth == 499, "Country_of_Birth"] <- "Asia"
+string_column[string_column$Country_of_Birth == 506, "Country_of_Birth"] <- "Lebanon"
+string_column[string_column$Country_of_Birth == 232, "Country_of_Birth"] <- "Other"
+string_column[string_column$Country_of_Birth == 508, "Country_of_Birth"] <- "Syria"
+###########################################
+
+x<-sort(table(string_column$Country_of_Birth), decreasing = TRUE)
+
+##add some color and labels
+barplot(x,
+        col = rainbow(length(x)),
+        main = "Respondent Birth Country (Non US)",
+        xlab = "Countries",
+        ylab = "Responses",
+        las = 1,
+)
+legend("topright", 
+       legend = row.names(x), 
+       fill = rainbow(length(x)), ncol = 3,
+       cex = 0.5)
+
+```
+The US truly is a melting pot of different cultures. We do not have an even distribution of respondents from each country, but nevertheless they share one thing in common: they were not born in the US. 
+
+```{r}
+sprintf("We have %i unique respondents that were born outside the US", nrow(string_column))
+```
+Using this sample size we can get some insight into how foreign born Americans vote. We look at how respondents self Identify. We see that we have more Democrats in our respondents than Republicans.
+
+```{r}
+###pie chart of respondent party ID
+pie_chart_party<-select(non_us_Born_cleaned_unique, Party_ID=VCF0303)
+
+pie_chart_party_cleaned<-pie_chart_party[complete.cases(pie_chart_party[1]),]
+
+string_party_col <- data.frame(lapply(pie_chart_party_cleaned, as.character), stringsAsFactors=FALSE)
+
+cols = c("royalblue", "green", "red")
+#update each country
+string_party_col[string_party_col$Party_ID == 1, "Party_ID"] <- "Democrats"
+string_party_col[string_party_col$Party_ID == 2, "Party_ID"] <- "Independents"
+string_party_col[string_party_col$Party_ID == 3, "Party_ID"] <- "Republicans"
+
+# Plot the chart with title.
+pie(table(string_party_col),cex = 0.8, main = "Party ID of Immigrants", col = cols)
+
+
+```
+
+Without drillin
+
+```{r}
+
+party_birth_place<-select(non_us_Born_cleaned_unique, Party_ID=VCF0303, Country_of_Birth = VCF0142)
+
+party_birth_place_cleaned<-party_birth_place[complete.cases(party_birth_place[1]),]
+
+```
+
+

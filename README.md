@@ -9,13 +9,17 @@ This is the first and only *individual* (as opposed to *team*) this semester.
 
 Term: Spring 2021
 
-+ Projec title: Lorem ipsum dolor sit amet
-+ This project is conducted by [your name]
++ Projec title: How Immigrants influence elections
++ This project is conducted by Dennis Shpits
 
-+ Project summary: [a short summary] Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
++ Project summary: Immigration does not only change the dynamics of the labor market, but might also change election outcomes. Recently there have been rumors that the Democratic party plans on securing more votes in elections by increasing immigration. This analysis will try to provide statistical evidence of whether this assumtion holds water.
 
-Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
+### Table of Contents
+* [Folder Structure](#structure)
+* [Data Source](#data)
 
+<a name="structure"></a>
+## Folder Structure
 ```
 proj/
 ├── lib/
@@ -24,5 +28,6 @@ proj/
 ├── figs/
 └── output/
 ```
-
-Please see each subfolder for a README file.
+<a name="data"></a>
+## American National Election Studies
+For our analysis we used the following [link](https://electionstudies.org/data-center/). The data used has been unzipped and placed in the data folder.
