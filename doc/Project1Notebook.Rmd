@@ -15,16 +15,18 @@ Immigration can change election results. In this R notebook we will explore the 
 #install.packages("tidyverse")
 #install.packages("haven")
 #install.packages("dplyr")
+#install.packages("ggplot2")
 
+library(ggplot2)
 library(haven)
 library(dplyr)
-setwd("C:/Users/Dennis/Documents/GithubClone/Spring2021-Project1-dennisshpits")
-getwd()
 
-data_sav_file <- "./data/anes_timeseries_cdf.sav"
+#setwd("C:/Users/Dennis/Documents/GithubClone/Spring2021-Project1-dennisshpits")
+#getwd()
+
+data_sav_file <- "../data/anes_timeseries_cdf.sav"
 
 anes_dat <- read_sav(data_sav_file)
-
 ```
 
 
@@ -141,7 +143,6 @@ legend("topright",
        legend = row.names(x), 
        fill = rainbow(length(x)), ncol = 3,
        cex = 0.5)
-
 ```
 The US truly is a melting pot of different cultures. We do not have an even distribution of respondents from each country, but nevertheless they share one thing in common: they were not born in the US. 
 
@@ -166,18 +167,71 @@ string_party_col[string_party_col$Party_ID == 3, "Party_ID"] <- "Republicans"
 
 # Plot the chart with title.
 pie(table(string_party_col),cex = 0.8, main = "Party ID of Immigrants", col = cols)
-
-
 ```
-
-Without drillin
+Next we want to drill down on the above graph. We want to identify what countries lean towards Republicans. We want to look at places that have a significant number of responses, so we only look at the top countries where we have responses.
 
 ```{r}
-
 party_birth_place<-select(non_us_Born_cleaned_unique, Party_ID=VCF0303, Country_of_Birth = VCF0142)
 
 party_birth_place_cleaned<-party_birth_place[complete.cases(party_birth_place[1]),]
 
+SEA_born<-party_birth_place_cleaned %>% filter(Country_of_Birth == 428)
+
+string_party_col_SEA <- data.frame(lapply(SEA_born, as.character), stringsAsFactors=FALSE)
+
+#update each country
+string_party_col_SEA[string_party_col_SEA$Party_ID == 1, "Party_ID"] <- "Democrats"
+string_party_col_SEA[string_party_col_SEA$Party_ID == 2, "Party_ID"] <- "Independents"
+string_party_col_SEA[string_party_col_SEA$Party_ID == 3, "Party_ID"] <- "Republicans"
+
+# Plot the chart with title.
+pie(table(string_party_col_SEA$Party_ID),cex = 0.8, main = "Party ID of South East Asians", col = cols)
+```
+Looks like Republicans have a stronghold in South East Asia, but where else?
+```{r}
+South_America_born_filtered<-party_birth_place_cleaned %>% filter(Country_of_Birth == 259)
+
+
+string_party_col_South_America <- data.frame(lapply(South_America_born_filtered, as.character), stringsAsFactors=FALSE)
+
+#update each country
+string_party_col_South_America[string_party_col_South_America$Party_ID == 1, "Party_ID"] <- "Democrats"
+string_party_col_South_America[string_party_col_South_America$Party_ID == 2, "Party_ID"] <- "Independents"
+string_party_col_South_America[string_party_col_South_America$Party_ID == 3, "Party_ID"] <- "Republicans"
+
+# Plot the chart with title.
+pie(table(string_party_col_South_America$Party_ID),cex = 0.8, main = "Party ID of South Americans", col = cols)
 ```
 
+South America seems like a great place to recruit Republican voters.
+
+In order to see how Immigrants have changed their voting over the years it is better to view a timeseries graph. In the graph below we see a dip between 64-68 and 76-80 for the Democratic president. 1968 was considered a "realiging election" so there is no surprise there. 1980 is when Reagan won in a landslide.
+```{r}
+save_column<-grep("VCF0704a", colnames(non_us_Born_cleaned_parents_too))
+
+Which_President_Party_vote<-non_us_Born_cleaned_parents_too[complete.cases(non_us_Born_cleaned_parents_too[save_column]),]
+
+#voted Democrat
+Which_President_Dem_vote<-Which_President_Party_vote %>% filter(VCF0704a == 1)
+theme_set(theme_light())
+
+#change column names
+President_Dem_vote_years<-select(Which_President_Dem_vote, Party_Vote=VCF0704a, Year = VCF0004)
+
+President_Dem_vote_years_grouped<-President_Dem_vote_years %>% group_by(Year) %>% summarise(count_votes = n())
+
+
+plt<-ggplot(President_Dem_vote_years_grouped, aes(x=Year, y=count_votes)) + geom_point() +
+  geom_line(color = "#00AFBB")
+
+plt + labs(
+  title = "Voting by Immigrants for Democratic President ",
+  subtitle = "Period 1952-1992",
+  caption = "Data: ANES",
+  x = "Year",
+  y = "Votes for Dem Pres."
+)
+
+
+```
 

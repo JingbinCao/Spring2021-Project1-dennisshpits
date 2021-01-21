@@ -17,6 +17,7 @@ Term: Spring 2021
 ### Table of Contents
 * [Folder Structure](#structure)
 * [Data Source](#data)
+* [R Libraries Used](#library)
 
 <a name="structure"></a>
 ## Folder Structure
@@ -31,3 +32,9 @@ proj/
 <a name="data"></a>
 ## American National Election Studies
 For our analysis we used the following [link](https://electionstudies.org/data-center/). The data used has been unzipped and placed in the data folder.
+<a name="library"></a>
+## R Libraries
+The following R libraries should be installed in order to run this notebook:
+* ggplot2
+* haven
+* dplyr
