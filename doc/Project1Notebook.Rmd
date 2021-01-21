@@ -21,10 +21,11 @@ library(ggplot2)
 library(haven)
 library(dplyr)
 
-#setwd("C:/Users/Dennis/Documents/GithubClone/Spring2021-Project1-dennisshpits")
-#getwd()
+zipF<-"../data/anes_timeseries_cdf_sav.zip"
 
-data_sav_file <- "../data/anes_timeseries_cdf.sav"
+unzip(zipF,exdir="../output")
+
+data_sav_file <- "../output/anes_timeseries_cdf.sav"
 
 anes_dat <- read_sav(data_sav_file)
 ```
