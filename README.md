@@ -31,7 +31,7 @@ proj/
 ```
 <a name="data"></a>
 ## American National Election Studies
-For our analysis we used the following [link](https://electionstudies.org/data-center/). The data used has been unzipped and placed in the data folder.
+For our analysis we used the following [link](https://electionstudies.org/data-center/). The data used has been zipped and placed in the data folder. The R notebook will handle the unzipping of the file.
 <a name="library"></a>
 ## R Libraries
 The following R libraries should be installed in order to run this notebook:
