@@ -1,19 +1,13 @@
 ---
 title: "Voting patterns of Immigrants past & present"
 output: html_notebook
-author: Dennis Shpits
+author: "Dennis Shpits"
 date: "`r Sys.Date()`"
 ---
 
 If you think of immigration as the act of importing political ideology then perhaps by focusing on voting patterns of immigrants, you can make some interesting conclusions. In contemporary discourse surrounding immigration there is a politically significant category of people known as [Dreamers](https://americasvoice.org/blog/what-is-a-dreamer/). How will the potential executive orders by the Democratic President influence the outcomes of future elections? In this R notebook we will explore the ANES dataset. Particularly we will explore how foreign born voters can sway election results toward a certain party. Later we will analyze children of Immigrants.
 ```{r load libraries, warning=FALSE, message=FALSE, include=FALSE}
 #Have to install the following package
-
-#install packages if not installed
-#if(!require(ggplot2)){install.packages('ggplot2')}
-#if(!require(dplyr)){install.packages('dplyr')}
-#if(!require(haven)){install.packages('haven')}
-#if(!require(tidyverse)){install.packages('tidyverse')}
 packages.used=as.list(
   c(
   "tidyverse",
@@ -171,8 +165,8 @@ legend("topright",
        legend = row.names(x), 
        fill = rainbow(length(x)), ncol = 3,
        cex = 0.5)
-dev.copy(png,'../figs/allcountires.png')
-dev.off()
+invisible(dev.copy(png,'../figs/allcountires.png'))
+invisible(dev.off())
 ```
 The US truly is a melting pot of different cultures. We do not have an even distribution of respondents from each country, but nevertheless they share one thing in common: they were not born in the US and neither were their parents. Notice how most of our immigrants are from Europe.
 ```{r}
@@ -202,11 +196,10 @@ pie(table(string_party_col),cex = 0.8, main = "Party ID of Immigrants 1952-1994"
 
 legend("bottomright",legend=leg,bty="n", fill=cols)
 
-dev.copy(png,'../figs/immigrantparty.png')
-dev.off()
+invisible(dev.copy(png,'../figs/immigrantparty.png'))
+invisible(dev.off())
 ```
 Next we want to drill down on the above graph. We identify what backgrounds lean towards Republicans.
-
 ```{r message=FALSE, warning = FALSE}
 party_birth_place<-select(non_us_Born_cleaned_unique, Party_ID=VCF0303, Country_of_Birth = VCF0142)
 
@@ -228,10 +221,10 @@ pie(table(string_party_col_SEA$Party_ID),cex = 0.8, main = "Party ID of Southeas
 
 legend("bottomright",legend=leg,bty="n", fill=cols)
 
-dev.copy(png,'../figs/southeastasianparty.png')
-dev.off()
+invisible(dev.copy(png,'../figs/southeastasianparty.png'))
+invisible(dev.off())
 ```
-Looks like Republicans had a stronghold with Southeast Asians between 1952-1994. The following places are considered to be in Southeast Asia from our ANES dataset: Indochina, Thailand, Malaya, Burma, Philippines, Indonesia. This is mainly due to anti-communist refugees that fled those areas.
+Looks like Republicans had a stronghold with Southeast Asians between 1952-1994. The following places are considered to be in Southeast Asia from our ANES dataset: Indochina, Thailand, Malaysia, Burma, Philippines, Indonesia. This is mainly due to anti-communist refugees that fled those areas.
 ```{r message=FALSE, warning = FALSE}
 South_America_born_filtered<-party_birth_place_cleaned %>% filter(Country_of_Birth == 259)
 
@@ -250,8 +243,8 @@ pie(table(string_party_col_South_America$Party_ID),cex = 0.8, main = "Party ID o
 
 legend("bottomright",legend=leg,bty="n", fill=cols)
 
-dev.copy(png,'../figs/southamericanparty.png')
-dev.off()
+invisible(dev.copy(png,'../figs/southamericanparty.png'))
+invisible(dev.off())
 ```
 South America seems like a great place to recruit Republican voters in the years between 1952 and 1994.
 
@@ -282,8 +275,8 @@ string_scale_SA_cleaned[string_scale_SA_cleaned$Religion_important == 2, "Religi
 barplot(as.integer(string_scale_SA_cleaned$count_val),names.arg=string_scale_SA_cleaned$Religion_important,xlab="Yes/No",ylab="Count",col="red",
         main="Republican South Americans view Religion Important 1952-1994",border="yellow")
 
-dev.copy(png,'../figs/southamericanreligion.png')
-dev.off()
+invisible(dev.copy(png,'../figs/southamericanreligion.png'))
+invisible(dev.off())
 ```
 In order to see how Immigrants can impact elections we see if there is an increase in eligible voter population. With an increase in eligible voter population is there a clear winning trend for a certain party?
 ```{r message=FALSE, warning = FALSE}
@@ -341,8 +334,8 @@ plt<-plt + labs(
 
 plt + scale_color_manual(name = "Line meaning", values = c("blue" = "blue", "red" = "red", "black" = "black" ), labels = c("Eligible to Vote", "Voted for Dem Pres", "Voted for Rep Pres"))
 
-dev.copy(png,'../figs/eligiblevsactual.png')
-dev.off()
+invisible(dev.copy(png,'../figs/eligiblevsactual.png'))
+invisible(dev.off())
 ```
 From the limited data we have, we see in 1992 when there was a spike in new eligible voters, there were more votes for the Democratic Presidential candidate than for the Republican by our respondents.
 
@@ -385,8 +378,8 @@ pie(table(party_younger_Asians$Party_ID),cex = 0.8, main = "Party ID of Younger 
 
 legend("bottomright",legend=leg,bty="n", fill=cols)
 
-dev.copy(png,'../figs/youngerasians.png')
-dev.off()
+invisible(dev.copy(png,'../figs/youngerasians.png'))
+invisible(dev.off())
 ```
 In a single generation the tide has changed. I am not the first to stumble upon this [finding](https://www.npr.org/sections/itsallpolitics/2015/09/16/439574726/how-asian-american-voters-went-from-republican-to-democratic).
 
@@ -408,8 +401,8 @@ eligible_vote_years_non_US_parents_grouped<-eligible_vote_years_non_US_parents %
 barplot(eligible_vote_years_non_US_parents_grouped$count_non_voters,names.arg=eligible_vote_years_non_US_parents_grouped$Year,xlab="Year",ylab="No Vote",col="blue",
 main="Not registered and did not vote (Respondent has Foreign born parents)",border="red")
 
-dev.copy(png,'../figs/immigrantsWhoDontVote.png')
-dev.off()
+invisible(dev.copy(png,'../figs/immigrantsWhoDontVote.png'))
+invisible(dev.off())
 ```
 Dreamers are not citizens and therefore cannot participate in elections. This might change in the future because of new legislation to naturalize Dreamers. We want to further analyze this set of individuals. We will only look at data since 2004 since Dreamers have an average age of about 24 years old. We will only look at respondents that fall into the age groups between 17-34.
 ```{r message=FALSE, warning = FALSE}
@@ -455,8 +448,8 @@ pie(table(string_unique_young$Political_View),cex = 0.8, main = paste("Party ID 
 
 legend("bottomright",legend=leg,bty="n", fill=cols)
 
-dev.copy(png,'../figs/partyOfDreamers.png')
-dev.off()
+invisible(dev.copy(png,'../figs/partyOfDreamers.png'))
+invisible(dev.off())
 ```
 There is no surprise here. We have a majority of Democrats for this group, however when the same respondents were asked to place themselves on a [left-right political spectrum](https://en.wikipedia.org/wiki/Left%E2%80%93right_political_spectrum) we see something interesting. 
 
@@ -476,8 +469,8 @@ spectrum_grouped<-spectrum %>% group_by(Spectrum) %>% summarise(count_spec = n()
 barplot(spectrum_grouped$count_spec,names.arg=spectrum_grouped$Spectrum,xlab="Left(0)-Right(10) Spectrum",ylab="# of respondents",col="orange",
 main=paste("Political Spectrum Children of Immigrants (Ages 17-34) n=", nrow(spectrum)),border="purple")
 
-dev.copy(png,'../figs/HistogramOfDreamers.png')
-dev.off()
+invisible(dev.copy(png,'../figs/HistogramOfDreamers.png'))
+invisible(dev.off())
 ```
 Very few are towards the left of the political spectrum. We have more right leaning individuals. So even though the respondents are mostly democrats, their political views fall more towards moderates or conservatives.
 
@@ -524,8 +517,8 @@ ggplot(data = factor_stacked_bar_grouped, aes(fill=Education, y=count_val, x=Par
   y = "Respondents"
   )
 
-dev.copy(png,'../figs/EducationOfDreamers.png')
-dev.off()
+invisible(dev.copy(png,'../figs/EducationOfDreamers.png'))
+invisible(dev.off())
 ```
 No clear patterns emerge from looking at educational attainment. Both Democrats and Republicans have an equal mix of respondents that have similar education levels.
 
@@ -564,8 +557,8 @@ legend("topright",
        legend = row.names(x), 
        fill = rainbow(length(x)), ncol = 3,
        cex = 0.9)
-dev.copy(png,'../figs/races.png')
-dev.off()
+invisible(dev.copy(png,'../figs/races.png'))
+invisible(dev.off())
 ```
 We see a clear pattern emerging. The group of younger children of immigrants who are not eligible to vote are now mostly Hispanic. There has been a shift in demographics of immigrants since the second half of the 20th century. How do we expect them to vote if they were given the ability to cast a ballot?
 
@@ -605,8 +598,8 @@ ggplot(data = factor_stacked_bar_grouped, aes(fill=Hispanic, y=count_val, x=Part
   y = "Respondents"
   )
 
-dev.copy(png,'../figs/EthnicityOfDreamers.png')
-dev.off()
+invisible(dev.copy(png,'../figs/EthnicityOfDreamers.png'))
+invisible(dev.off())
 ```
 <font size="20">Final Thoughts</font>
 
